@@ -5,7 +5,7 @@
   "main": "tslint-plugin-graphql.json",
   "scripts": {
     "build": "rm -rf rules && tsc -p tsconfig.json",
-    "test": "npm run build && tslint --test test/rules/**/*",
+    "test": "yarn run build && tslint --test test/rules/**/*",
     "watch:test": "jest --watch",
     "tslint": "tslint --config test/tslint1.json test/test1.ts && tslint --config test/tslint2.json test/test2.ts"
   },
