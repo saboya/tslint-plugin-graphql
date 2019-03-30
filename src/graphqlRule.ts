@@ -8,19 +8,17 @@ import {
     buildSchema,
     validate,
 } from "graphql";
-import { without } from "lodash";
 import { RuleFailure, Rules, RuleWalker, IOptions } from "tslint";
 import * as ts from "typescript";
 import fs = require("fs");
 import path = require("path");
 
-const graphQLValidationRuleNames = [
+const relayRuleNames = [
     "UniqueOperationNames",
     "LoneAnonymousOperation",
     "KnownTypeNames",
     "FragmentsOnCompositeTypes",
     "VariablesAreInputTypes",
-    "ScalarLeafs",
     "FieldsOnCorrectType",
     "UniqueFragmentNames",
     // "KnownFragmentNames", -> any interpolation
@@ -28,24 +26,21 @@ const graphQLValidationRuleNames = [
     "PossibleFragmentSpreads",
     "NoFragmentCycles",
     "UniqueVariableNames",
-    "NoUndefinedVariables",
     "NoUnusedVariables",
-    "KnownDirectives",
     "KnownArgumentNames",
     "UniqueArgumentNames",
     "ValuesOfCorrectType",
-    "ProvidedRequiredArguments",
     "VariablesInAllowedPosition",
     "OverlappingFieldsCanBeMerged",
     "UniqueInputFieldNames",
 ];
-// Omit these rules when in Relay env
-const relayRuleNames = without(graphQLValidationRuleNames,
+const otherValidationRuleNames = [
     "ScalarLeafs",
-    "ProvidedNonNullArguments",
+    "ProvidedRequiredArguments",
     "KnownDirectives",
     "NoUndefinedVariables",
-);
+];
+const graphQLValidationRuleNames = [...relayRuleNames, ...otherValidationRuleNames];
 
 const graphQLValidationRules = graphQLValidationRuleNames.map((ruleName) => {
     return require(`graphql/validation/rules/${ruleName}`)[ruleName];

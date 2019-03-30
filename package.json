@@ -45,7 +45,6 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
-    "graphql": "^14.2.0",
-    "lodash": "^4.17.11"
+    "graphql": "^14.2.0"
   }
 }

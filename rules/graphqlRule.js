@@ -15,18 +15,16 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable max-classes-per-file ordered-imports object-literal-sort-keys
 var graphql_1 = require("graphql");
-var lodash_1 = require("lodash");
 var tslint_1 = require("tslint");
 var ts = require("typescript");
 var fs = require("fs");
 var path = require("path");
-var graphQLValidationRuleNames = [
+var relayRuleNames = [
     "UniqueOperationNames",
     "LoneAnonymousOperation",
     "KnownTypeNames",
     "FragmentsOnCompositeTypes",
     "VariablesAreInputTypes",
-    "ScalarLeafs",
     "FieldsOnCorrectType",
     "UniqueFragmentNames",
     // "KnownFragmentNames", -> any interpolation
@@ -34,19 +32,21 @@ var graphQLValidationRuleNames = [
     "PossibleFragmentSpreads",
     "NoFragmentCycles",
     "UniqueVariableNames",
-    "NoUndefinedVariables",
     "NoUnusedVariables",
-    "KnownDirectives",
     "KnownArgumentNames",
     "UniqueArgumentNames",
     "ValuesOfCorrectType",
-    "ProvidedRequiredArguments",
     "VariablesInAllowedPosition",
     "OverlappingFieldsCanBeMerged",
     "UniqueInputFieldNames",
 ];
-// Omit these rules when in Relay env
-var relayRuleNames = lodash_1.without(graphQLValidationRuleNames, "ScalarLeafs", "ProvidedNonNullArguments", "KnownDirectives", "NoUndefinedVariables");
+var otherValidationRuleNames = [
+    "ScalarLeafs",
+    "ProvidedRequiredArguments",
+    "KnownDirectives",
+    "NoUndefinedVariables",
+];
+var graphQLValidationRuleNames = relayRuleNames.concat(otherValidationRuleNames);
 var graphQLValidationRules = graphQLValidationRuleNames.map(function (ruleName) {
     return require("graphql/validation/rules/" + ruleName)[ruleName];
 });
