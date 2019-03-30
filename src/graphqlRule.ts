@@ -5,9 +5,9 @@ import {
     IntrospectionQuery,
     buildClientSchema,
     parse,
-    validate
+    validate,
 } from "graphql";
-import { without, } from "lodash";
+import { without } from "lodash";
 import { RuleFailure, Rules, RuleWalker, IOptions } from "tslint";
 import * as ts from "typescript";
 import fs = require("fs");
@@ -217,7 +217,7 @@ function replaceExpression(fragment: string, chunk: string, env?: Env) {
         } else {
             return "..." + strWithLen(nameLength);
         }
-        // 
+        //
     } else if (env === "lokka" && /\.\.\.\s*$/.test(chunk)) {
         // This is Lokka-style fragment interpolation where you actually type the '...' yourself
         return strWithLen(nameLength + 3);
@@ -227,7 +227,7 @@ function replaceExpression(fragment: string, chunk: string, env?: Env) {
     }
 }
 function strWithLen(len: number) {
-    // from 
+    // from
     // http://stackoverflow.com/questions/14343844/create-a-string-of-variable-length-filled-with-a-repeated-character
     return new Array(len + 1).join("x");
 }
