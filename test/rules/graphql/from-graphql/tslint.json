@@ -1,0 +1,18 @@
+{
+    "extends": [
+        "../../../rules"
+    ],
+    "rules": {
+        "graphql": [
+            true,
+            {
+                // Import default settings for your GraphQL client. Supported values:
+                // 'apollo', 'relay', 'lokka'
+                "env": "apollo",
+                "schemaFilepath": "./test/schema.graphql",
+                "tagName":"f.a"
+                // tagName is gql by default
+            }
+        ]
+    }
+}

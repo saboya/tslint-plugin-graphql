@@ -5,6 +5,7 @@ import {
     IntrospectionQuery,
     buildClientSchema,
     parse,
+    buildSchema,
     validate,
 } from "graphql";
 import { without } from "lodash";
@@ -127,13 +128,17 @@ class GraphQLWalker extends RuleWalker {
         const {
             schemaJson, // Schema via JSON object
             schemaJsonFilepath, // Or Schema via absolute filepath
+            schemaFilepath, // Or Schema graphql file
             env,
             tagName: tagNameOption,
         } = optionGroup;
 
         // Validate and unpack schema
         let schema: GraphQLSchema;
-        if (schemaJson) {
+        if (schemaFilepath) {
+            const realSchemaFilepath = path.resolve(schemaFilepath);
+            schema = initSchemaFromGraphqlFile(realSchemaFilepath);
+        } else if (schemaJson) {
             schema = initSchema(schemaJson);
         } else if (schemaJsonFilepath) {
             const realSchemaJsonFilepath = path.resolve(schemaJsonFilepath);
@@ -167,6 +172,7 @@ class GraphQLWalker extends RuleWalker {
 export interface IOptionGroup {
     schemaJson?: any;
     schemaJsonFilepath?: string;
+    schemaFilepath?: string;
     env?: Env;
     tagName?: string;
 }
@@ -190,6 +196,9 @@ function initSchema(json: IGraphQLSchemaJSON & IntrospectionQuery) {
 
 function initSchemaFromFile(jsonFile: string) {
     return initSchema(JSON.parse(fs.readFileSync(jsonFile, "utf8")));
+}
+function initSchemaFromGraphqlFile(graphqlFile: string) {
+    return buildSchema(fs.readFileSync(graphqlFile, "utf8"));
 }
 function templateExpressionMatchesTag(tagName: string, node: ts.Node) {
     const tagNameSegments = tagName.split(".").length;

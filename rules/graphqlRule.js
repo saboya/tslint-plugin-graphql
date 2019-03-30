@@ -134,10 +134,15 @@ var GraphQLWalker = /** @class */ (function (_super) {
     GraphQLWalker.prototype.parseOptions = function (optionGroup) {
         var schemaJson = optionGroup.schemaJson, // Schema via JSON object
         schemaJsonFilepath = optionGroup.schemaJsonFilepath, // Or Schema via absolute filepath
+        schemaFilepath = optionGroup.schemaFilepath, // Or Schema graphql file
         env = optionGroup.env, tagNameOption = optionGroup.tagName;
         // Validate and unpack schema
         var schema;
-        if (schemaJson) {
+        if (schemaFilepath) {
+            var realSchemaFilepath = path.resolve(schemaFilepath);
+            schema = initSchemaFromGraphqlFile(realSchemaFilepath);
+        }
+        else if (schemaJson) {
             schema = initSchema(schemaJson);
         }
         else if (schemaJsonFilepath) {
@@ -180,6 +185,9 @@ function initSchema(json) {
 function initSchemaFromFile(jsonFile) {
     return initSchema(JSON.parse(fs.readFileSync(jsonFile, "utf8")));
 }
+function initSchemaFromGraphqlFile(graphqlFile) {
+    return graphql_1.buildSchema(fs.readFileSync(graphqlFile, "utf8"));
+}
 function templateExpressionMatchesTag(tagName, node) {
     var tagNameSegments = tagName.split(".").length;
     if (tagNameSegments === 1) {
@@ -208,7 +216,7 @@ function replaceExpression(fragment, chunk, env) {
         else {
             return "..." + strWithLen(nameLength);
         }
-        // 
+        //
     }
     else if (env === "lokka" && /\.\.\.\s*$/.test(chunk)) {
         // This is Lokka-style fragment interpolation where you actually type the '...' yourself
@@ -220,7 +228,7 @@ function replaceExpression(fragment, chunk, env) {
     }
 }
 function strWithLen(len) {
-    // from 
+    // from
     // http://stackoverflow.com/questions/14343844/create-a-string-of-variable-length-filled-with-a-repeated-character
     return new Array(len + 1).join("x");
 }
